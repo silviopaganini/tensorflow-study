@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "./tensorflow-study/static/js/main.b65ed3a2.chunk.js",
-    "main.js.map": "./tensorflow-study/static/js/main.b65ed3a2.chunk.js.map",
+    "main.js": "./tensorflow-study/static/js/main.698d5131.chunk.js",
+    "main.js.map": "./tensorflow-study/static/js/main.698d5131.chunk.js.map",
     "runtime-main.js": "./tensorflow-study/static/js/runtime-main.ed1f0715.js",
     "runtime-main.js.map": "./tensorflow-study/static/js/runtime-main.ed1f0715.js.map",
     "static/js/2.519e2bc3.chunk.js": "./tensorflow-study/static/js/2.519e2bc3.chunk.js",
@@ -14,6 +14,6 @@
   "entrypoints": [
     "static/js/runtime-main.ed1f0715.js",
     "static/js/2.519e2bc3.chunk.js",
-    "static/js/main.b65ed3a2.chunk.js"
+    "static/js/main.698d5131.chunk.js"
   ]
 }

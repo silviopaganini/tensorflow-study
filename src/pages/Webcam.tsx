@@ -3,6 +3,8 @@ import { data, Tensor3D } from '@tensorflow/tfjs'
 import { Box, Button } from 'theme-ui'
 import { TFPage } from '../types'
 
+const CAMERA_SCALE = 1.2
+
 const Webcam = ({ model }: TFPage) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [loading, setLoading] = useState<boolean>(false)
@@ -61,7 +63,7 @@ const Webcam = ({ model }: TFPage) => {
   return (
     <Box p={4}>
       <Box>
-        <video width="960" height="720" ref={videoRef}></video>
+        <video width={640 * CAMERA_SCALE} height={480 * CAMERA_SCALE} ref={videoRef}></video>
       </Box>
       <Button onClick={onCapture} variant="primary">
         Capture
