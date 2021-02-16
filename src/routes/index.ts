@@ -2,12 +2,12 @@ import { ImageDetection, Webcam } from '../pages'
 
 const Routes = [
   {
-    path: '/image-detection',
+    path: './image-detection',
     component: ImageDetection,
     name: 'Random Image Detection',
   },
   {
-    path: '/webcam',
+    path: './webcam',
     component: Webcam,
     name: 'Webcam',
   },

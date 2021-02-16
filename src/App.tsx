@@ -31,7 +31,7 @@ const App = () => {
           {model ? (
             <Switch>
               {Routes.map(({ path, component: Component }, index) => (
-                <Route key={index} path={path}>
+                <Route key={index} path={path.replace('.', '')}>
                   <Component model={model} />
                 </Route>
               ))}
