@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'
+import * as mobilenet from '@tensorflow-models/mobilenet'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Box } from 'theme-ui'
+import Routes from './routes'
+import { Nav } from './components'
 
-function App() {
+const App = () => {
+  const [model, setModel] = useState<mobilenet.MobileNet>()
+  const [error, setError] = useState<boolean>(false)
+  const loadModel = async () => {
+    try {
+      setModel(await mobilenet.load())
+    } catch (e) {
+      console.log(e)
+      setError(true)
+    }
+  }
+
+  useEffect(() => {
+    loadModel()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Nav />
+      {error ? (
+        <Box p={3}>Error loading Model</Box>
+      ) : (
+        <>
+          {model ? (
+            <Switch>
+              {Routes.map(({ path, component: Component }, index) => (
+                <Route key={index} path={path}>
+                  <Component model={model} />
+                </Route>
+              ))}
+            </Switch>
+          ) : (
+            <Box p={3}>Loading Model</Box>
+          )}
+        </>
+      )}
+    </Router>
+  )
 }
 
-export default App;
+export default App
