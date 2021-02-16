@@ -2,12 +2,12 @@ import { ImageDetection, Webcam } from '../pages'
 
 const Routes = [
   {
-    path: './image-detection',
+    path: '/tensorflow-study/image-detection',
     component: ImageDetection,
     name: 'Random Image Detection',
   },
   {
-    path: './webcam',
+    path: '/tensorflow-study/webcam',
     component: Webcam,
     name: 'Webcam',
   },
