@@ -61,7 +61,7 @@ const Webcam = ({ model }: TFPage) => {
   return (
     <Box p={4}>
       <Box>
-        <video ref={videoRef}></video>
+        <video width="960" height="720" ref={videoRef}></video>
       </Box>
       <Button onClick={onCapture} variant="primary">
         Capture
