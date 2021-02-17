@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import * as mobilenet from '@tensorflow-models/mobilenet'
+import * as knn from '@tensorflow-models/knn-classifier'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Box } from 'theme-ui'
 import Routes from './routes'
 import { Nav } from './components'
 
 const App = () => {
-  const [model, setModel] = useState<mobilenet.MobileNet>()
+  const [modelMobilenet, setModelMobilenet] = useState<mobilenet.MobileNet>()
+  const [modelKnn, setModelKnn] = useState<knn.KNNClassifier>()
   const [error, setError] = useState<boolean>(false)
-  const loadModel = async () => {
+  const loadModels = async () => {
     try {
-      setModel(await mobilenet.load())
+      setModelMobilenet(await mobilenet.load())
+      setModelKnn(await knn.create())
     } catch (e) {
       console.log(e)
       setError(true)
@@ -18,7 +21,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    loadModel()
+    loadModels()
   }, [])
 
   return (
@@ -28,16 +31,16 @@ const App = () => {
         <Box p={3}>Error loading Model</Box>
       ) : (
         <>
-          {model ? (
+          {modelMobilenet && modelKnn ? (
             <Switch>
-              {Routes.map(({ path, component: Component }, index) => (
-                <Route key={index} path={path}>
-                  <Component model={model} />
+              {Routes.map(({ exact, path, component: Component }, index) => (
+                <Route exact={exact} key={index} path={path}>
+                  <Component modelMobilenet={modelMobilenet} modelKnn={modelKnn} />
                 </Route>
               ))}
             </Switch>
           ) : (
-            <Box p={3}>Loading Model</Box>
+            <Box p={3}>Loading Models</Box>
           )}
         </>
       )}

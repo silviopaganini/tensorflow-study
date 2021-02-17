@@ -5,7 +5,7 @@ import { TFPage } from '../types'
 
 const CAMERA_SCALE = 1.2
 
-const Webcam = ({ model }: TFPage) => {
+const Webcam = ({ modelMobilenet }: TFPage) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [result, setResult] = useState<JSX.Element[]>()
@@ -13,14 +13,14 @@ const Webcam = ({ model }: TFPage) => {
   const classify = useCallback(
     (img: Tensor3D) => {
       const load = async (img: Tensor3D) => {
-        if (!model) {
+        if (!modelMobilenet) {
           setResult(undefined)
           return
         }
 
         try {
           setLoading(true)
-          const output = await model.classify(img)
+          const output = await modelMobilenet.classify(img)
           const outputList = output.map((o, index) => (
             <Box key={index}>
               <b>{o.className}</b> - {`${Math.round(o.probability * 100)}%`}
@@ -39,7 +39,7 @@ const Webcam = ({ model }: TFPage) => {
       }
       load(img)
     },
-    [model]
+    [modelMobilenet]
   )
 
   const onCapture = async () => {

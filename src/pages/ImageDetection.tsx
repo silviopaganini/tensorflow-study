@@ -3,7 +3,7 @@ import { Box, Image, Button } from 'theme-ui'
 import { useCallback, useRef, useState } from 'react'
 import { TFPage } from '../types'
 
-const ImageDetection = ({ model }: TFPage) => {
+const ImageDetection = ({ modelMobilenet, modelKnn }: TFPage) => {
   const ref = useRef<HTMLImageElement>(null)
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -13,7 +13,7 @@ const ImageDetection = ({ model }: TFPage) => {
   const classify = useCallback(
     (img: HTMLImageElement) => {
       const load = async (img: HTMLImageElement) => {
-        if (!model) {
+        if (!modelMobilenet) {
           setLoading(false)
           setResult(undefined)
           return
@@ -21,7 +21,7 @@ const ImageDetection = ({ model }: TFPage) => {
 
         try {
           setLoading(true)
-          const output = await model.classify(img)
+          const output = await modelMobilenet.classify(img)
           const outputList = output.map((o, index) => (
             <Box key={index}>
               <b>{o.className}</b> - {`${Math.round(o.probability * 100)}%`}
@@ -38,7 +38,7 @@ const ImageDetection = ({ model }: TFPage) => {
       }
       load(img)
     },
-    [model]
+    [modelMobilenet]
   )
 
   const onLoadImage = () => {
@@ -47,7 +47,7 @@ const ImageDetection = ({ model }: TFPage) => {
 
   return (
     <Box p={4}>
-      {model && (
+      {modelMobilenet && (
         <Box sx={{ width: 1000 }}>
           <Box sx={{ height: 700 }}>
             <Image

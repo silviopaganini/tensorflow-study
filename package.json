@@ -1,7 +1,7 @@
 {
   "name": "tensorflow",
   "version": "0.1.0",
-  "homepage": "./tensorflow-study",
+  "homepage": "/tensorflow-study",
   "private": true,
   "dependencies": {
     "@tensorflow-models/knn-classifier": "^1.2.2",
