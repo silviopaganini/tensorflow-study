@@ -1,4 +1,5 @@
 import { Home, ImageDetection, TransferLearning, Webcam } from '../pages'
+import SentimentAnalysis from '../pages/SentimentAnalysis'
 
 const Routes = [
   {
@@ -21,6 +22,11 @@ const Routes = [
     path: '/tensorflow-study/transfer-learning',
     component: TransferLearning,
     name: 'Transfer Learning',
+  },
+  {
+    path: '/tensorflow-study/sentiment',
+    component: SentimentAnalysis,
+    name: 'Sentiment Analysis',
   },
 ]
 
