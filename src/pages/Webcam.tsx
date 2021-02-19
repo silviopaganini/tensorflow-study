@@ -63,7 +63,14 @@ const Webcam = ({ modelMobilenet }: TFPage) => {
   return (
     <Box p={4}>
       <Box>
-        <video width={640 * CAMERA_SCALE} height={480 * CAMERA_SCALE} ref={videoRef}></video>
+        <video
+          style={{
+            transform: 'scaleX(-1)',
+          }}
+          width={640 * CAMERA_SCALE}
+          height={480 * CAMERA_SCALE}
+          ref={videoRef}
+        ></video>
       </Box>
       <Button onClick={onCapture} variant="primary">
         Capture

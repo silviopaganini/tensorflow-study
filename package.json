@@ -4,6 +4,7 @@
   "homepage": "/tensorflow-study",
   "private": true,
   "dependencies": {
+    "@tensorflow-models/face-landmarks-detection": "0.0.1",
     "@tensorflow-models/knn-classifier": "^1.2.2",
     "@tensorflow-models/mobilenet": "^2.0.4",
     "@tensorflow-models/toxicity": "^1.2.2",

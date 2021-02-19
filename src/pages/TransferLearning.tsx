@@ -89,7 +89,14 @@ const TransferLearning = ({ modelMobilenet, modelKnn }: TFPage) => {
     <Box p={4}>
       <Box sx={{ mx: 'auto', textAlign: 'center', maxWidth: 640 * CAMERA_SCALE }}>
         <Box>
-          <video width={640 * CAMERA_SCALE} height={480 * CAMERA_SCALE} ref={videoRef}></video>
+          <video
+            style={{
+              transform: 'scaleX(-1)',
+            }}
+            width={640 * CAMERA_SCALE}
+            height={480 * CAMERA_SCALE}
+            ref={videoRef}
+          ></video>
         </Box>
         <Box
           mt={3}

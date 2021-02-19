@@ -76,9 +76,19 @@ const SentimentAnalysis = () => {
       {!loading && (
         <>
           <Heading as="h2">Sentiment analysis</Heading>
-          <form onSubmit={onAnalyse}>
-            <Input autoComplete="off" mt={3} onChange={onChange} value={state} name="input" />
-          </form>
+          <Box as="form" sx={{ position: 'relative' }} onSubmit={onAnalyse}>
+            <Input
+              maxLength={100}
+              autoComplete="off"
+              mt={3}
+              onChange={onChange}
+              value={state}
+              name="input"
+            />
+            <Box sx={{ position: 'absolute', bottom: -25, right: '2px', fontSize: 0 }}>
+              {state.length}/100
+            </Box>
+          </Box>
           {score && scoreToxicity && (
             <Box mt={2}>
               <Text>
