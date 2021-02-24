@@ -6,8 +6,6 @@ import Routes from '../../routes'
 const Nav = () => {
   const location = useLocation()
 
-  console.log(location.pathname)
-
   return (
     <Flex
       as="nav"
@@ -22,7 +20,6 @@ const Nav = () => {
       }}
     >
       {Routes.map(r => {
-        console.log(location.pathname, r.path, location.pathname === r.path)
         return (
           <Link
             key={r.name}
