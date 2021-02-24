@@ -5,6 +5,8 @@ import {
   ImageDetection,
   TransferLearning,
   Webcam,
+  Audio,
+  HandPose,
 } from '../pages'
 
 const Routes = [
@@ -38,6 +40,16 @@ const Routes = [
     path: '/tensorflow-study/facemesh',
     component: FaceMesh,
     name: 'Face Mesh',
+  },
+  {
+    path: '/tensorflow-study/audio',
+    component: Audio,
+    name: 'Audio',
+  },
+  {
+    path: '/tensorflow-study/hand-pose',
+    component: HandPose,
+    name: 'Hand Tracking',
   },
 ]
 
