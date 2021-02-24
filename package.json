@@ -1,7 +1,7 @@
 {
   "name": "tensorflow",
   "version": "0.1.0",
-  "homepage": "/tensorflow-study",
+  "homepage": "/",
   "private": true,
   "dependencies": {
     "@tensorflow-models/face-landmarks-detection": "0.0.1",

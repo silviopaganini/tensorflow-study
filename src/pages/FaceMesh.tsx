@@ -119,12 +119,13 @@ const FaceMesh = () => {
   }, [loopPredictions])
 
   useEffect(() => {
-    if (!videoRef.current || !canvasRef.current) return
+    if (!videoRef.current) return
     videoRef.current.srcObject = media
     videoRef.current.onloadedmetadata = () => {
-      videoRef.current!.play()
+      videoRef.current?.play()
 
-      const { width, height } = canvasRef.current!
+      if (!canvasRef.current) return
+      const { width, height } = canvasRef.current
 
       camera = new PerspectiveCamera(60, width / height, 0.1, 1000)
       camera.position.z = width / 2
@@ -156,7 +157,7 @@ const FaceMesh = () => {
 
     return () => {
       cancelAnimationFrame(raf)
-      stats.end()
+      stats?.end()
     }
   }, [media, loadModel, videoRef, canvasRef, statsRef])
 

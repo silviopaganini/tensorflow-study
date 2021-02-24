@@ -9,46 +9,50 @@ import {
   HandPose,
 } from '../pages'
 
+const { homepage: BASEPATH } = require('../../package.json')
+
+console.log(BASEPATH)
+
 const Routes = [
   {
-    path: '/tensorflow-study/',
+    path: BASEPATH,
     component: Home,
     name: 'Home',
     exact: true,
   },
   {
-    path: '/tensorflow-study/image-detection',
+    path: `${BASEPATH}image-detection`,
     component: ImageDetection,
     name: 'Random Image Detection',
   },
   {
-    path: '/tensorflow-study/webcam',
+    path: `${BASEPATH}webcam`,
     component: Webcam,
     name: 'Object Detection',
   },
   {
-    path: '/tensorflow-study/transfer-learning',
+    path: `${BASEPATH}transfer-learning`,
     component: TransferLearning,
     name: 'Transfer Learning',
   },
   {
-    path: '/tensorflow-study/sentiment',
+    path: `${BASEPATH}sentiment`,
     component: SentimentAnalysis,
     name: 'Sentiment Analysis',
   },
   {
-    path: '/tensorflow-study/facemesh',
+    path: `${BASEPATH}facemesh`,
     component: FaceMesh,
     name: 'Face Mesh',
   },
 
   {
-    path: '/tensorflow-study/hand-pose',
+    path: `${BASEPATH}hand-pose`,
     component: HandPose,
     name: 'Hand Mesh',
   },
   // {
-  //   path: '/tensorflow-study/audio',
+  //   path: `${BASEPATH}audio`,
   //   component: Audio,
   //   name: 'Audio',
   // },

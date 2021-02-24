@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/tensorflow-study/static/js/main.b119654c.chunk.js",
-    "main.js.map": "/tensorflow-study/static/js/main.b119654c.chunk.js.map",
-    "runtime-main.js": "/tensorflow-study/static/js/runtime-main.a757d84a.js",
-    "runtime-main.js.map": "/tensorflow-study/static/js/runtime-main.a757d84a.js.map",
-    "static/js/2.03e7c3af.chunk.js": "/tensorflow-study/static/js/2.03e7c3af.chunk.js",
-    "static/js/2.03e7c3af.chunk.js.map": "/tensorflow-study/static/js/2.03e7c3af.chunk.js.map",
-    "static/js/3.eedcfb10.chunk.js": "/tensorflow-study/static/js/3.eedcfb10.chunk.js",
-    "static/js/3.eedcfb10.chunk.js.map": "/tensorflow-study/static/js/3.eedcfb10.chunk.js.map",
-    "index.html": "/tensorflow-study/index.html",
-    "static/js/2.03e7c3af.chunk.js.LICENSE.txt": "/tensorflow-study/static/js/2.03e7c3af.chunk.js.LICENSE.txt"
+    "main.js": "/static/js/main.6ed88aac.chunk.js",
+    "main.js.map": "/static/js/main.6ed88aac.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.b0b5fb0d.js",
+    "runtime-main.js.map": "/static/js/runtime-main.b0b5fb0d.js.map",
+    "static/js/2.39bd4d9a.chunk.js": "/static/js/2.39bd4d9a.chunk.js",
+    "static/js/2.39bd4d9a.chunk.js.map": "/static/js/2.39bd4d9a.chunk.js.map",
+    "static/js/3.18fc628b.chunk.js": "/static/js/3.18fc628b.chunk.js",
+    "static/js/3.18fc628b.chunk.js.map": "/static/js/3.18fc628b.chunk.js.map",
+    "index.html": "/index.html",
+    "static/js/2.39bd4d9a.chunk.js.LICENSE.txt": "/static/js/2.39bd4d9a.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.a757d84a.js",
-    "static/js/2.03e7c3af.chunk.js",
-    "static/js/main.b119654c.chunk.js"
+    "static/js/runtime-main.b0b5fb0d.js",
+    "static/js/2.39bd4d9a.chunk.js",
+    "static/js/main.6ed88aac.chunk.js"
   ]
 }
