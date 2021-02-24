@@ -54,13 +54,18 @@ const theme: Theme = {
     text: '#FFF',
     background: '#333',
     primary: '#FFF',
+    gray: '#f0f0f0',
     secondary: '#333',
     green: 'rgb(99, 255, 203)',
     muted: '#999',
+    code: '#444',
   },
   links: {
     text: {
       color: 'green',
+      '&:hover': {
+        textDecoration: 'none',
+      },
     },
     nav: {
       fontSize: 0,
@@ -109,11 +114,12 @@ const theme: Theme = {
       fontSize: 4,
     },
     h3: {
-      color: 'text',
+      color: 'muted',
       fontFamily: 'heading',
       lineHeight: 'heading',
       fontWeight: 'heading',
       fontSize: 3,
+      variant: 'text.heading',
     },
     h4: {
       color: 'muted',
@@ -147,11 +153,17 @@ const theme: Theme = {
       color: 'primary',
     },
     pre: {
+      my: 3,
+      p: 3,
       fontFamily: 'monospace',
       overflowX: 'auto',
       code: {
-        color: 'inherit',
+        color: 'code',
       },
+      maxWidth: '700px',
+      borderRadius: '7px',
+      bg: 'gray',
+      color: 'black',
     },
     // @ts-ignore
     spinner: {
@@ -177,6 +189,12 @@ const theme: Theme = {
     },
     img: {
       maxWidth: '100%',
+    },
+    hr: {
+      my: 4,
+      bg: 'muted',
+      opacity: 0.3,
+      height: '1px',
     },
   },
 }
