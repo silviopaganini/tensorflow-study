@@ -73,7 +73,7 @@ const ImageDetection = () => {
             ref={ref}
             alt="cat"
             crossOrigin="anonymous"
-            src="https://picsum.photos/1000/700"
+            src={`https://picsum.photos/seed/${key}/1000/700`}
             sx={{ maxHeight: 700, width: '100%' }}
           />
           {result && <Box mt={3}>{result}</Box>}
