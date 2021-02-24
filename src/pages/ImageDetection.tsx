@@ -1,12 +1,13 @@
-import '@tensorflow/tfjs'
-import { Box, Image, Button } from 'theme-ui'
-import { useCallback, useRef, useState } from 'react'
-import { TFPage } from '../types'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Box, Image, Button, Heading, Container } from 'theme-ui'
+import * as mobilenet from '@tensorflow-models/mobilenet'
+import { Loading, Error } from '../components'
 
-const ImageDetection = ({ modelMobilenet, modelKnn }: TFPage) => {
+const ImageDetection = () => {
   const ref = useRef<HTMLImageElement>(null)
   const [loading, setLoading] = useState<boolean>(false)
-
+  const [modelMobilenet, setModelMobilenet] = useState<mobilenet.MobileNet>()
+  const [error, setError] = useState<boolean>(false)
   const [key, setKey] = useState<number>(0)
   const [result, setResult] = useState<JSX.Element[]>()
 
@@ -45,37 +46,54 @@ const ImageDetection = ({ modelMobilenet, modelKnn }: TFPage) => {
     if (ref.current) classify(ref.current)
   }
 
+  const loadModels = async () => {
+    try {
+      setModelMobilenet(await mobilenet.load())
+      setLoading(false)
+    } catch (e) {
+      console.log(e)
+      setError(true)
+    }
+  }
+
+  useEffect(() => {
+    loadModels()
+  }, [])
+
   return (
-    <Box p={4}>
-      {modelMobilenet && (
-        <Box sx={{ width: 1000 }}>
-          <Box sx={{ height: 700 }}>
-            <Image
-              onLoad={onLoadImage}
-              key={key}
-              ref={ref}
-              alt="cat"
-              crossOrigin="anonymous"
-              src="https://picsum.photos/1000/700"
-            />
-          </Box>
-          <Box mt={3}>{loading ? 'loading' : result ? result : ''}</Box>
-          {!loading && (
-            <Button
-              mt={3}
-              variant="primary"
-              onClick={() => {
-                setLoading(true)
-                setResult(undefined)
-                setKey(key + 1)
-              }}
-            >
-              reload
-            </Button>
-          )}
-        </Box>
+    <Container as="section" variant="layout.section">
+      <Heading as="h2">Random Image Detection</Heading>
+      {error ? (
+        <Error />
+      ) : modelMobilenet ? (
+        <Container>
+          <Image
+            onLoad={onLoadImage}
+            key={key}
+            ref={ref}
+            alt="cat"
+            crossOrigin="anonymous"
+            src="https://picsum.photos/1000/700"
+            sx={{ maxHeight: 700, width: '100%' }}
+          />
+          {result && <Box mt={3}>{result}</Box>}
+          <Button
+            mt={3}
+            variant="primary"
+            sx={{ pointerEvents: loading ? 'none' : 'visible', opacity: loading ? 0.5 : 1 }}
+            onClick={() => {
+              setLoading(true)
+              setResult(undefined)
+              setKey(key + 1)
+            }}
+          >
+            {loading ? 'Loading...' : 'Try a new image'}
+          </Button>
+        </Container>
+      ) : (
+        <Loading text="Loading Mobilenet Tensorflow Models" />
       )}
-    </Box>
+    </Container>
   )
 }
 

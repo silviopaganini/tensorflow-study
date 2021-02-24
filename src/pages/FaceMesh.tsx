@@ -1,190 +1,199 @@
-import { useCallback, useEffect, useRef } from 'react'
-import { Box } from 'theme-ui'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Box, Container, Heading } from 'theme-ui'
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection'
+
+import Stats from 'three/examples/jsm/libs/stats.module'
+import {
+  Scene,
+  PerspectiveCamera,
+  BufferGeometry,
+  Float32BufferAttribute,
+  WebGLRenderer,
+  PointsMaterial,
+  Points,
+  Color,
+  TextureLoader,
+} from 'three'
+
+import { Error, Loading } from '../components'
+import useUserMedia from '../hooks/useUserMedia'
+import { PALLETE } from '../common'
 
 let raf = 0
 
-const NUM_KEYPOINTS = 468
-const NUM_IRIS_KEYPOINTS = 5
-const BLUE = '#157AB3'
-const RED = '#FF2C35'
-const VIDEO_SIZE = 500
+const CAMERA_SCALE = 1.25
+const WIDTH = 640 * CAMERA_SCALE
+const HEIGHT = 360 * CAMERA_SCALE
 
-let ctx: CanvasRenderingContext2D
 let model: faceLandmarksDetection.FaceLandmarksPackage
 
-const distance = (a: number[], b: number[]) => {
-  return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2))
+const scene = new Scene()
+let camera: PerspectiveCamera
+let renderer: WebGLRenderer
+const geometry = new BufferGeometry()
+let positions: number[] = []
+const color: Color = new Color()
+let colors: number[] = []
+let points: Points
+let stats: Stats
+
+const propsStatsContainer = {
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  '& > div': {
+    position: 'static !important',
+  },
 }
 
 const FaceMesh = () => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const statsRef = useRef<HTMLDivElement>(null)
+  const [error, setError] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [media] = useUserMedia({
+    video: {
+      facingMode: 'user',
+      width: WIDTH,
+      height: HEIGHT,
+    },
+  })
 
   const loopPredictions = useCallback(async () => {
-    if (model && videoRef.current && ctx) {
+    try {
+      if (!model || !videoRef.current || !canvasRef.current) {
+        raf = requestAnimationFrame(loopPredictions)
+        return
+      }
+
       const predictions = await model.estimateFaces({
         returnTensors: false,
         flipHorizontal: false,
         input: videoRef.current,
       })
 
-      ctx.drawImage(videoRef.current, 0, 0, VIDEO_SIZE, VIDEO_SIZE, 0, 0, VIDEO_SIZE, VIDEO_SIZE)
-
-      predictions.forEach(prediction => {
-        const keypoints = prediction.mesh
-
-        ctx.fillStyle = BLUE
-
-        for (let i = 0; i < NUM_KEYPOINTS; i++) {
-          //@ts-ignore
-          const x = keypoints[i][0]
-          //@ts-ignore
-          const y = keypoints[i][1]
-
-          ctx.beginPath()
-          ctx.arc(x, y, 1 /* radius */, 0, 2 * Math.PI)
-          ctx.fill()
-        }
-
+      positions = []
+      colors = []
+      const { width, height } = canvasRef.current!
+      predictions?.forEach(p => {
         //@ts-ignore
-        if (keypoints.length > NUM_KEYPOINTS) {
-          ctx.strokeStyle = RED
-          ctx.lineWidth = 1
+        const { annotations } = p
 
-          //@ts-ignore
-          const leftCenter = keypoints[NUM_KEYPOINTS]
-          //@ts-ignore
-          const leftDiameterY = distance(keypoints[NUM_KEYPOINTS + 4], keypoints[NUM_KEYPOINTS + 2])
-          //@ts-ignore
-          const leftDiameterX = distance(keypoints[NUM_KEYPOINTS + 3], keypoints[NUM_KEYPOINTS + 1])
-
-          ctx.beginPath()
-          ctx.ellipse(
-            leftCenter[0],
-            leftCenter[1],
-            leftDiameterX / 2,
-            leftDiameterY / 2,
-            0,
-            0,
-            2 * Math.PI
-          )
-          ctx.stroke()
-
-          //@ts-ignore
-          if (keypoints.length > NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS) {
-            //@ts-ignore
-            const rightCenter = keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS]
-            const rightDiameterY = distance(
-              //@ts-ignore
-              keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 2],
-              //@ts-ignore
-              keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 4]
-            )
-            const rightDiameterX = distance(
-              //@ts-ignore
-              keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 3],
-              //@ts-ignore
-              keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 1]
-            )
-
-            ctx.beginPath()
-            ctx.ellipse(
-              rightCenter[0],
-              rightCenter[1],
-              rightDiameterX / 2,
-              rightDiameterY / 2,
-              0,
-              0,
-              2 * Math.PI
-            )
-            ctx.stroke()
-          }
-        }
+        Object.keys(annotations).forEach((a, index) => {
+          color.setHex(PALLETE[index % (PALLETE.length - 1)])
+          annotations[a].forEach((i: number[]) => {
+            positions.push(i[0] - width / 2, height / 2 - i[1], -i[2])
+            colors.push(color.r, color.g, color.b)
+          })
+        })
       })
+
+      geometry.setAttribute('position', new Float32BufferAttribute(positions, 3))
+      geometry.setAttribute('color', new Float32BufferAttribute(colors, 3))
+      geometry.computeBoundingSphere()
+      points.geometry.attributes.position.needsUpdate = true
+
+      renderer.render(scene, camera)
+      stats.update()
+    } catch (e) {
+      console.log(e)
     }
 
     raf = requestAnimationFrame(loopPredictions)
   }, [])
 
   const loadModel = useCallback(async () => {
-    model = await faceLandmarksDetection.load(
-      faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
-    )
+    try {
+      setLoading(true)
+      model = await faceLandmarksDetection.load(
+        faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
+      )
 
-    loopPredictions()
+      setLoading(false)
+      loopPredictions()
+    } catch (e) {
+      setLoading(false)
+      setError(true)
+    }
   }, [loopPredictions])
 
-  const setupCamera = useCallback(
-    async (video: HTMLVideoElement) => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'user',
-            // Only setting the video to a specified size in order to accommodate a
-            // point cloud, so on mobile devices accept the default size.
-            width: VIDEO_SIZE,
-            height: VIDEO_SIZE,
-          },
-        })
-
-        ctx = canvasRef?.current?.getContext('2d')!
-        ctx.translate(VIDEO_SIZE, 0)
-        ctx.scale(-1, 1)
-        ctx.fillStyle = BLUE
-        ctx.strokeStyle = BLUE
-        ctx.lineWidth = 0.5
-
-        const onLoadedMetadata = () => {
-          video.removeEventListener('loadedmetadata', onLoadedMetadata)
-          loadModel()
-        }
-        video.addEventListener('loadedmetadata', onLoadedMetadata)
-        video.srcObject = stream
-      } catch (e) {
-        console.log(e)
-      }
-    },
-    [loadModel]
-  )
-
   useEffect(() => {
-    if (videoRef.current && canvasRef.current) {
-      console.log('useEffect')
-      setupCamera(videoRef.current)
+    if (!videoRef.current || !canvasRef.current) return
+    videoRef.current.srcObject = media
+    videoRef.current.onloadedmetadata = () => {
+      videoRef.current!.play()
+
+      const { width, height } = canvasRef.current!
+
+      camera = new PerspectiveCamera(60, width / height, 0.1, 1000)
+      camera.position.z = width / 2
+
+      const texture = new TextureLoader().load(
+        'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/sprites/disc.png'
+      )
+      //
+
+      renderer = new WebGLRenderer({
+        canvas: canvasRef.current!,
+        alpha: true,
+      })
+
+      renderer.setSize(width, height)
+
+      const material = new PointsMaterial({ size: 10, vertexColors: true, map: texture })
+
+      points = new Points(geometry, material)
+      scene.add(points)
+
+      if (!stats) {
+        stats = Stats()
+        statsRef.current?.appendChild(stats.dom)
+      }
+
+      loadModel()
     }
 
     return () => {
       cancelAnimationFrame(raf)
+      stats.end()
     }
-  }, [setupCamera])
+  }, [media, loadModel, videoRef, canvasRef, statsRef])
 
   return (
-    <Box p={4}>
-      <Box sx={{ position: 'relative' }}>
-        <video
-          autoPlay
-          style={{
-            transform: 'scaleX(-1)',
-            visibility: 'hidden',
-            width: 'auto',
-            height: 'auto',
-          }}
-          ref={videoRef}
-        />
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate3d(-50%, -50%, 0)',
-          }}
-          width={VIDEO_SIZE}
-          height={VIDEO_SIZE}
-        />
-      </Box>
-    </Box>
+    <Container as="section" variant="layout.section">
+      <Heading as="h2">Face Mesh</Heading>
+      <Heading as="h4" variant="styles.h4">
+        Create the face mesh of the detected face on the camera feed. <br />
+        Each color group represents one feature of the face being mapped, which means we can get the
+        positons individually.
+      </Heading>
+      {error ? (
+        <Error />
+      ) : (
+        <>
+          {loading && <Loading text="Loading Face Landmarks Model" />}
+          <Box sx={{ position: 'relative' }}>
+            <video style={{ opacity: 0.4 }} autoPlay ref={videoRef} width={WIDTH} height={HEIGHT} />
+            <canvas
+              ref={canvasRef}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              }}
+              width={WIDTH}
+              height={HEIGHT}
+            />
+          </Box>
+        </>
+      )}
+      <Box
+        //@ts-ignore
+        sx={propsStatsContainer}
+        ref={statsRef}
+      />
+    </Container>
   )
 }
 

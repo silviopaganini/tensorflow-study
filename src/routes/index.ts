@@ -5,7 +5,7 @@ import {
   ImageDetection,
   TransferLearning,
   Webcam,
-  Audio,
+  // Audio,
   HandPose,
 } from '../pages'
 
@@ -24,7 +24,7 @@ const Routes = [
   {
     path: '/tensorflow-study/webcam',
     component: Webcam,
-    name: 'Webcam',
+    name: 'Object Detection',
   },
   {
     path: '/tensorflow-study/transfer-learning',
@@ -41,16 +41,17 @@ const Routes = [
     component: FaceMesh,
     name: 'Face Mesh',
   },
-  {
-    path: '/tensorflow-study/audio',
-    component: Audio,
-    name: 'Audio',
-  },
+
   {
     path: '/tensorflow-study/hand-pose',
     component: HandPose,
-    name: 'Hand Tracking',
+    name: 'Hand Mesh',
   },
+  // {
+  //   path: '/tensorflow-study/audio',
+  //   component: Audio,
+  //   name: 'Audio',
+  // },
 ]
 
 export default Routes

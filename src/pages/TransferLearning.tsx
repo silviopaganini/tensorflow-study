@@ -1,30 +1,24 @@
 import { data, nextFrame } from '@tensorflow/tfjs'
 import React, { useEffect, useRef, useState } from 'react'
-import { Box, Text, Button, Flex } from 'theme-ui'
-import { TFPage } from '../types'
+import { Box, Button, Flex, Container, Heading } from 'theme-ui'
+import * as knn from '@tensorflow-models/knn-classifier'
+import * as mobilenet from '@tensorflow-models/mobilenet'
+import { Error, Loading } from '../components'
 
 const CAMERA_SCALE = 1.2
 const POSES = ['left', 'up', 'down', 'center', 'right'].sort((a, b) => a.localeCompare(b))
 let raf: number | undefined
 
-const TransferLearning = ({ modelMobilenet, modelKnn }: TFPage) => {
+const TransferLearning = () => {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [modelMobilenet, setModelMobilenet] = useState<mobilenet.MobileNet>()
+  const [modelKnn, setModelKnn] = useState<knn.KNNClassifier>()
   const [webcam, setWebcam] = useState<any>()
   const [result, setResult] = useState<JSX.Element>()
   const [takingPictures, setTakingPictures] = useState<boolean>(false)
   const [takenPoses, setTakenPoses] = useState<any[]>([])
   const [allPoses, setAllPoses] = useState<boolean>(false)
-
-  useEffect(() => {
-    const loadCam = async (video: HTMLVideoElement) => {
-      setWebcam(await data.webcam(video))
-    }
-    if (videoRef.current) loadCam(videoRef.current)
-
-    return () => {
-      stopLoopDetection()
-    }
-  }, [videoRef])
+  const [error, setError] = useState<boolean>(false)
 
   const stopLoopDetection = () => {
     if (raf) window.cancelAnimationFrame(raf)
@@ -85,57 +79,92 @@ const TransferLearning = ({ modelMobilenet, modelKnn }: TFPage) => {
     loopDetection()
   }
 
+  const loadModels = async (video: HTMLVideoElement) => {
+    try {
+      setModelMobilenet(await mobilenet.load())
+      setModelKnn(await knn.create())
+      setWebcam(await data.webcam(video))
+    } catch (e) {
+      console.log(e)
+      setError(true)
+    }
+  }
+
+  useEffect(() => {
+    if (videoRef.current) loadModels(videoRef.current)
+
+    return () => {
+      stopLoopDetection()
+    }
+  }, [videoRef])
+
   return (
-    <Box p={4}>
-      <Box sx={{ mx: 'auto', textAlign: 'center', maxWidth: 640 * CAMERA_SCALE }}>
-        <Box>
-          <video
-            style={{
-              transform: 'scaleX(-1)',
-            }}
-            width={640 * CAMERA_SCALE}
-            height={480 * CAMERA_SCALE}
-            ref={videoRef}
-          ></video>
-        </Box>
-        <Box
-          mt={3}
-          sx={{
-            opacity: takingPictures ? 0.5 : 1,
-            pointerEvents: takingPictures ? 'none' : 'visible',
-          }}
-        >
-          {!allPoses && (
+    <Container as="section" variant="layout.section">
+      <Heading as="h2">Transfer Learning</Heading>
+      <Heading as="h4" variant="styles.h4">
+        Teach the machine all five head positions to start the position analysis.
+      </Heading>
+      {error ? (
+        <Error />
+      ) : (
+        <>
+          {(!modelKnn || !modelMobilenet) && (
+            <Loading text="Loading Mobilenet and KNN Tensorflow Models" />
+          )}
+          <Box sx={{ maxWidth: 640 * CAMERA_SCALE }}>
             <Box>
-              <Text>Teach the machine all angles of your face</Text>
-              <Flex sx={{ mt: 3, justifyContent: 'space-between' }}>
-                <Button onClick={() => addExample('left')} variant="secondary">
-                  Left
-                </Button>
-                <Button onClick={() => addExample('up')} variant="secondary">
-                  Up
-                </Button>
-                <Button onClick={() => addExample('center')} variant="secondary">
-                  Center
-                </Button>
-                <Button onClick={() => addExample('down')} variant="secondary">
-                  Down
-                </Button>
-                <Button onClick={() => addExample('right')} variant="secondary">
-                  Right
-                </Button>
-              </Flex>
+              <video
+                style={{
+                  transform: 'scaleX(-1)',
+                }}
+                width={640 * CAMERA_SCALE}
+                height={480 * CAMERA_SCALE}
+                ref={videoRef}
+              />
             </Box>
-          )}
-          {allPoses && (
-            <Button onClick={startLoopDetection} mt={5}>
-              Detect head position
-            </Button>
-          )}
-        </Box>
-        <Box mt={3}>{result}</Box>
-      </Box>
-    </Box>
+            {modelKnn && modelMobilenet && (
+              <>
+                <Box
+                  mt={3}
+                  sx={{
+                    opacity: takingPictures ? 0.5 : 1,
+                    pointerEvents: takingPictures ? 'none' : 'visible',
+                  }}
+                >
+                  {!allPoses && (
+                    <Box>
+                      <Flex sx={{ mt: 3, justifyContent: 'space-between' }}>
+                        <Button onClick={() => addExample('left')} variant="secondary">
+                          Left
+                        </Button>
+                        <Button onClick={() => addExample('up')} variant="secondary">
+                          Up
+                        </Button>
+                        <Button onClick={() => addExample('center')} variant="secondary">
+                          Center
+                        </Button>
+                        <Button onClick={() => addExample('down')} variant="secondary">
+                          Down
+                        </Button>
+                        <Button onClick={() => addExample('right')} variant="secondary">
+                          Right
+                        </Button>
+                      </Flex>
+                    </Box>
+                  )}
+                  {allPoses && (
+                    <Button variant="primary" onClick={startLoopDetection} mt={2}>
+                      Detect head position
+                    </Button>
+                  )}
+                </Box>
+                <Box mt={3}>{result}</Box>
+              </>
+            )}
+          </Box>
+        </>
+      )}
+    </Container>
   )
 }
 
