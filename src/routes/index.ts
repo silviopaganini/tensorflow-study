@@ -11,8 +11,6 @@ import {
 
 const { homepage: BASEPATH } = require('../../package.json')
 
-console.log(BASEPATH)
-
 const Routes = [
   {
     path: BASEPATH,
