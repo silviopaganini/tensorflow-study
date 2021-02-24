@@ -11,7 +11,7 @@ import {
 
 const Routes = [
   {
-    path: '/',
+    path: '/tensorflow-study/',
     component: Home,
     name: 'Home',
     exact: true,
