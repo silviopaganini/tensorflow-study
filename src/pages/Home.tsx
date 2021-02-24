@@ -66,6 +66,15 @@ const Home = () => {
         </Link>
         .
       </Text>
+      <Heading as="h3" variant="styles.h3" sx={{ mt: 4 }}>
+        ❗ Disclaimer
+      </Heading>
+      <Text>
+        All experiments were heavily tested on a good spec machine on Chrome and Opera.
+        <br />
+        Some experimemts might make your machine fans go crazy 😁 or just not work at all depending
+        on your configuration.
+      </Text>
     </Container>
   )
 }
