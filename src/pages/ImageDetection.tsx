@@ -74,7 +74,7 @@ const ImageDetection = () => {
             alt="cat"
             crossOrigin="anonymous"
             src={`https://loremflickr.com/1000/700/nature?lock=${key}`}
-            sx={{ maxHeight: 700, width: '100%' }}
+            sx={{ maxHeight: 700, width: 'auto' }}
           />
           {result && <Box mt={3}>{result}</Box>}
           <Button
