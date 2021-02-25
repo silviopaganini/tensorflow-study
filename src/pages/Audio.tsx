@@ -72,7 +72,7 @@ const Audio = () => {
 
       const recognizer = speechCommands.create(
         'BROWSER_FFT', // fourier transform type, not useful to change
-        undefined, // speech commands vocabulary feature, not useful for your models
+        undefined, // speech commands vocabulary feature, not useful when training models with teachable machine
         checkpointURL,
         metadataURL
       )
@@ -85,7 +85,7 @@ const Audio = () => {
 
       getAudioData()
 
-      recognizer.listen(
+      await recognizer.listen(
         //@ts-ignore
         result => {
           const results = Object.keys(classLabels).reduce((acc, _i, index) => {
@@ -105,7 +105,7 @@ const Audio = () => {
           includeSpectrogram: false,
           probabilityThreshold: 0.75,
           invokeCallbackOnNoiseAndUnknown: true,
-          overlapFactor: 0.5, // probably want between 0.5 and 0.75. More info in README
+          overlapFactor: 0.5,
         }
       )
     } catch (e) {
