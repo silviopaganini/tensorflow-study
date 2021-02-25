@@ -1,6 +1,3 @@
-import { setBackend } from '@tensorflow/tfjs'
-import '@tensorflow/tfjs-backend-wasm'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeProvider } from 'theme-ui'
@@ -8,16 +5,14 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import theme from './theme'
 
-setBackend('wasm').then(() => {
-  ReactDOM.render(
-    <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </React.StrictMode>,
-    document.getElementById('root')
-  )
-})
+ReactDOM.render(
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
+)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

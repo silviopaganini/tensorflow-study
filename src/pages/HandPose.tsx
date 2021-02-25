@@ -1,3 +1,6 @@
+import { setBackend } from '@tensorflow/tfjs'
+import '@tensorflow/tfjs-backend-wasm'
+
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Container, Heading } from 'theme-ui'
 import * as handpose from '@tensorflow-models/handpose'
@@ -109,7 +112,7 @@ const HandPose = () => {
     videoRef.current.srcObject = stream
     videoRef.current.onloadedmetadata = () => {
       videoRef.current!.play()
-      loadModel()
+      setBackend('wasm').then(loadModel)
     }
 
     const { width, height } = canvasRef.current

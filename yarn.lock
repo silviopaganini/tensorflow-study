@@ -1822,6 +1822,11 @@
   resolved "https://registry.yarnpkg.com/@tensorflow-models/mobilenet/-/mobilenet-2.0.4.tgz#7f40771fcc650f50febd49be72372d39c15f6f95"
   integrity sha512-fkcxDBldlYitDCV88xETwAQoBIC8xYKdDu80uBDuBZBfNC4k/jeVbZHM28WjvTDsJN7d7dYO4NbIkRAH0XHKSQ==
 
+"@tensorflow-models/speech-commands@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@tensorflow-models/speech-commands/-/speech-commands-0.5.2.tgz#38caf6c86c081b42491f6322a42a68cb9fd8ba49"
+  integrity sha512-wJfp5i8mMTG39o/9FXuwoURtxpbT+vN+1FiHEMBjbTNDE6UkX6mygoeUf3aBS8v4GlHAg1auzXoen5kyHVVaWA==
+
 "@tensorflow-models/toxicity@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@tensorflow-models/toxicity/-/toxicity-1.2.2.tgz#aed2cc92122f2fc949b42502bb55f8ed2e1d03a8"

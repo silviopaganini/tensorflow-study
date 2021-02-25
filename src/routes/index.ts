@@ -8,6 +8,7 @@ import {
   // Audio,
   HandPose,
   RealTimeObjDetection,
+  Audio,
 } from '../pages'
 
 const { homepage: BASEPATH } = require('../../package.json')
@@ -54,6 +55,11 @@ const Routes = [
     path: `${BASEPATH}realtime-obj-detection`,
     component: RealTimeObjDetection,
     name: 'Real-time Detection',
+  },
+  {
+    path: `${BASEPATH}audio-analysis`,
+    component: Audio,
+    name: 'Audio analysis',
   },
 ]
 
