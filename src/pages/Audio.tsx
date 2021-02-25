@@ -152,7 +152,7 @@ const Audio = () => {
       {error ? (
         <Error />
       ) : model ? (
-        <Box>{result}</Box>
+        <Box>{result || 'listening...'}</Box>
       ) : (
         <Loading text="Loading SpeechCommand Models" />
       )}
