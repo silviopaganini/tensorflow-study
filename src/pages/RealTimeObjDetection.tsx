@@ -41,7 +41,6 @@ const RealTimeObjDetection = () => {
           if (!ctx) return
 
           ctx.beginPath()
-          ctx.strokeStyle = '0x00FF00'
           ctx.strokeRect(p.bbox[0], p.bbox[1], p.bbox[2], p.bbox[3])
           ctx.stroke()
 
@@ -52,7 +51,7 @@ const RealTimeObjDetection = () => {
 
           const { width } = ctx.measureText(text)
           ctx.fillStyle = '#000'
-          ctx.fillRect(p.bbox[0], p.bbox[1] - 30, width + 10, 30)
+          ctx.fillRect(p.bbox[0] - 1, p.bbox[1] - 30, width + 10, 30)
 
           ctx.fillStyle = '#fff'
           ctx.fillText(text, p.bbox[0] + 5, p.bbox[1] - 10)

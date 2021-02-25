@@ -11,6 +11,10 @@ const Home = () => {
           TensorFlow.js
         </Link>
         ,{' '}
+        <Link href="https://threejs.org" target="_blank">
+          Three.js
+        </Link>
+        ,{' '}
         <Link href="https://reactjs.org" target="_blank">
           React
         </Link>{' '}
