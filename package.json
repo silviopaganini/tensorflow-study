@@ -4,6 +4,7 @@
   "homepage": "/",
   "private": true,
   "dependencies": {
+    "@tensorflow-models/coco-ssd": "^2.2.1",
     "@tensorflow-models/face-landmarks-detection": "0.0.1",
     "@tensorflow-models/handpose": "^0.0.7",
     "@tensorflow-models/knn-classifier": "^1.2.2",

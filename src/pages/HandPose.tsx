@@ -18,6 +18,7 @@ import * as dat from 'dat.gui'
 
 import { Error, Loading } from '../components'
 import useUserMedia from '../hooks/useUserMedia'
+import { PALLETE } from '../common'
 
 const CAMERA_SCALE = 1.25
 let model: handpose.HandPose | undefined = undefined
@@ -47,8 +48,6 @@ const propsGui = {
   offsetY: 137,
 }
 
-const palette = [0xedae49, 0xd1495b, 0x00798c, 0x30638e, 0x003d5b, 0x4b3f72, 0xe9190f]
-
 const HandPose = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -67,7 +66,7 @@ const HandPose = () => {
         const { width, height } = canvasRef.current
         predictions?.forEach(p => {
           Object.keys(p.annotations).forEach((a, index) => {
-            color.setHex(palette[index % (palette.length - 1)])
+            color.setHex(PALLETE[index % (PALLETE.length - 1)])
             p.annotations[a].forEach(i => {
               positions.push(
                 i[0] - width / 2 + propsGui.offsetX,

@@ -7,6 +7,7 @@ import {
   Webcam,
   // Audio,
   HandPose,
+  RealTimeObjDetection,
 } from '../pages'
 
 const { homepage: BASEPATH } = require('../../package.json')
@@ -49,11 +50,11 @@ const Routes = [
     component: HandPose,
     name: 'Hand Mesh',
   },
-  // {
-  //   path: `${BASEPATH}audio`,
-  //   component: Audio,
-  //   name: 'Audio',
-  // },
+  {
+    path: `${BASEPATH}realtime-obj-detection`,
+    component: RealTimeObjDetection,
+    name: 'Real-time Detection',
+  },
 ]
 
 export default Routes

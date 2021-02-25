@@ -1792,6 +1792,11 @@
   resolved "https://registry.yarnpkg.com/@tensorflow-models/blazeface/-/blazeface-0.0.5.tgz#6261fcc5de61a283ea409b69f6a851f44a809826"
   integrity sha512-bIMJDV2CD8rr7v9OrIDdDZVh9sbk0EhlZdHaDFpgWUw3Lp21wUN7GSifOJVE5hV2ngmpzM+J12OH8bG1GZoDag==
 
+"@tensorflow-models/coco-ssd@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@tensorflow-models/coco-ssd/-/coco-ssd-2.2.1.tgz#2fd5f778e4cc456e8c1da677a0d503d9245a7d5e"
+  integrity sha512-jhtG9O+9JRoliRwVwCbDURfrs+ibpqh5ClROZZiFRQz6P0d78b7tfyffCRFCwMTMuIEnSLVZO3I3XlwpWW0NFw==
+
 "@tensorflow-models/face-landmarks-detection@0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@tensorflow-models/face-landmarks-detection/-/face-landmarks-detection-0.0.1.tgz#70b9d87bed11ecbd166dc6880a2a7b4a3d71a353"
