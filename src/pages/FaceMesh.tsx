@@ -166,6 +166,7 @@ const FaceMesh = () => {
       <Heading as="h2">Face Mesh</Heading>
       <Heading as="h4" variant="styles.h4">
         Create the face mesh of the detected face on the camera feed. <br />
+        <br />
         Each color group represents one feature of the face being mapped, which means we can get the
         positons individually.
       </Heading>
@@ -173,8 +174,12 @@ const FaceMesh = () => {
         <Error />
       ) : (
         <>
-          {loading && <Loading text="Loading Face Landmarks Model" />}
-          <Box sx={{ position: 'relative' }}>
+          {loading && (
+            <Box mt={2}>
+              <Loading text="Loading Face Landmarks Model" />
+            </Box>
+          )}
+          <Box sx={{ position: 'relative', mt: 2 }}>
             <video style={{ opacity: 0.4 }} autoPlay ref={videoRef} width={WIDTH} height={HEIGHT} />
             <canvas
               ref={canvasRef}

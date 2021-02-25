@@ -1,6 +1,3 @@
-import { setBackend } from '@tensorflow/tfjs'
-import '@tensorflow/tfjs-backend-wasm'
-
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Container, Heading } from 'theme-ui'
 import * as handpose from '@tensorflow-models/handpose'
@@ -112,7 +109,7 @@ const HandPose = () => {
     videoRef.current.srcObject = stream
     videoRef.current.onloadedmetadata = () => {
       videoRef.current!.play()
-      setBackend('wasm').then(loadModel)
+      loadModel()
     }
 
     const { width, height } = canvasRef.current
@@ -160,6 +157,7 @@ const HandPose = () => {
       <Heading as="h4" variant="styles.h4">
         Put your hand where the camera can see and start tracking and tracing your hand mesh.
         <br />
+        <br />
         Each color group represents one feature of the hand being mapped, which means we can get the
         positons individually.
       </Heading>
@@ -167,8 +165,12 @@ const HandPose = () => {
         <Error />
       ) : (
         <>
-          {loading && <Loading text="Loading Hand Pose Model" />}
-          <Box sx={{ position: 'relative' }}>
+          {loading && (
+            <Box mt={2}>
+              <Loading text="Loading Hand Pose Model" />
+            </Box>
+          )}
+          <Box sx={{ mt: 2, position: 'relative' }}>
             <video
               style={{ opacity: 0.4, transform: 'scaleX(-1)' }}
               ref={videoRef}

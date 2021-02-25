@@ -20,7 +20,7 @@ const theme: Theme = {
   },
   lineHeights: {
     body: 1.5,
-    heading: 2,
+    heading: 1.5,
   },
   sizes: {
     container: '100%',
