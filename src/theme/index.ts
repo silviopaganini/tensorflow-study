@@ -12,6 +12,7 @@ const theme: Theme = {
     heading: 'inherit',
     monospace: 'Menlo, monospace',
   },
+  breakpoints: ['40em', '56em', '64em'],
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontWeights: {
     body: 400,
@@ -27,11 +28,15 @@ const theme: Theme = {
   },
   layout: {
     section: {
-      p: 4,
+      pt: [5, 5, 4],
+      px: 4,
       width: '100%',
     },
   },
   buttons: {
+    menu: {
+      ...defaultButton,
+    },
     primary: {
       ...defaultButton,
       cursor: 'pointer',
@@ -68,9 +73,9 @@ const theme: Theme = {
       },
     },
     nav: {
-      fontSize: 0,
+      fontSize: [2, 2, 0],
       mr: 4,
-      my: 2,
+      my: [3, 3, 2],
       color: 'primary',
       transition: 'all 0.15s ease-out',
       '&:active': {

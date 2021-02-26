@@ -112,7 +112,7 @@ const RealTimeObjDetection = () => {
           {loading && <Loading text="Loading Coco-SSD Model" />}
           <Box sx={{ position: 'relative' }}>
             <video
-              style={{ opacity: 0.4, transform: 'scaleX(-1)' }}
+              style={{ opacity: 0.4, transform: 'scaleX(-1)', width: '100%' }}
               ref={videoRef}
               width={640 * CAMERA_SCALE}
               height={360 * CAMERA_SCALE}

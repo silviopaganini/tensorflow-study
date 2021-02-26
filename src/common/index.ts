@@ -10,3 +10,7 @@ export const PALLETE = [
   0xf1c40f,
   0xfe5f55,
 ]
+
+export const isMobile = () => {
+  return window.innerWidth < 1024
+}
