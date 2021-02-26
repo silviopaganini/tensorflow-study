@@ -6,7 +6,10 @@ import Stats from 'three/examples/jsm/libs/stats.module'
 import { Error, Loading } from '../components'
 import { useUserMedia, removeUserMedia } from '../hooks'
 
-const CAMERA_SCALE = 1.5
+const CAMERA_SCALE = 2
+const WIDTH = 1280 / CAMERA_SCALE
+const HEIGHT = 720 / CAMERA_SCALE
+
 let raf = 0
 let model: cocoSsd.ObjectDetection
 let stats: Stats
@@ -26,15 +29,20 @@ const RealTimeObjDetection = () => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(true)
-  const [stream] = useUserMedia({ video: true })
   const [error, setError] = useState<boolean>(false)
+  const [media] = useUserMedia({
+    video: {
+      width: WIDTH,
+      height: HEIGHT,
+    },
+  })
 
   const analyseCamera = useCallback(async () => {
     try {
       if (ctx && videoRef.current && canvasRef.current) {
         ctx.save()
         ctx.scale(-1, 1)
-        ctx.drawImage(videoRef.current, 0, 0, 640 * CAMERA_SCALE * -1, 360 * CAMERA_SCALE)
+        ctx.drawImage(videoRef.current, 0, 0, WIDTH * -1, HEIGHT)
         ctx.restore()
         const predictions = await model.detect(canvasRef.current)
         predictions.forEach(p => {
@@ -78,8 +86,8 @@ const RealTimeObjDetection = () => {
   }, [setLoading, analyseCamera])
 
   useEffect(() => {
-    if (!videoRef.current || !canvasRef.current || !stream) return
-    videoRef.current.srcObject = stream
+    if (!videoRef.current || !canvasRef.current || !media) return
+    videoRef.current.srcObject = media
     videoRef.current.onloadedmetadata = () => {
       videoRef?.current?.play()
       loadModel()
@@ -94,10 +102,10 @@ const RealTimeObjDetection = () => {
 
     return () => {
       cancelAnimationFrame(raf)
-      removeUserMedia(stream)
+      removeUserMedia(media)
       raf = 0
     }
-  }, [canvasRef, videoRef, stream, loadModel])
+  }, [canvasRef, videoRef, media, loadModel])
 
   return (
     <Container as="section" variant="layout.section">
@@ -112,16 +120,16 @@ const RealTimeObjDetection = () => {
           {loading && <Loading text="Loading Coco-SSD Model" />}
           <Box sx={{ position: 'relative' }}>
             <video
-              style={{ opacity: 0.4, transform: 'scaleX(-1)', width: '100%' }}
+              style={{ opacity: 0.4, transform: 'scaleX(-1)' }}
               ref={videoRef}
-              width={640 * CAMERA_SCALE}
-              height={360 * CAMERA_SCALE}
+              width={WIDTH}
+              height={HEIGHT}
             />
             <canvas
               style={{ position: 'absolute', top: 0, left: 0 }}
               ref={canvasRef}
-              width={640 * CAMERA_SCALE}
-              height={360 * CAMERA_SCALE}
+              width={WIDTH}
+              height={HEIGHT}
             />
           </Box>
         </>

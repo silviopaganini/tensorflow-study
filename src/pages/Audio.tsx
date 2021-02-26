@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Text, Container, Heading, Link } from 'theme-ui'
 import * as speechCommands from '@tensorflow-models/speech-commands'
 import { useUserMedia, useAnalyser, removeUserMedia } from '../hooks'
-import { Error, Loading } from '../components'
+import { ModelReadyContainer } from '../components'
 
 let raf = 0
 
@@ -149,13 +149,13 @@ const Audio = () => {
         from Google.
       </Heading>
       <canvas ref={canvasRef} width={800} height={500} />
-      {error ? (
-        <Error />
-      ) : model ? (
+      <ModelReadyContainer
+        error={error}
+        loadingMessage="Loading SpeechCommand Models"
+        modelLoaded={!!model}
+      >
         <Box>{result || 'listening...'}</Box>
-      ) : (
-        <Loading text="Loading SpeechCommand Models" />
-      )}
+      </ModelReadyContainer>
     </Container>
   )
 }

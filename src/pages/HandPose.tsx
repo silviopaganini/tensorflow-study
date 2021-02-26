@@ -14,13 +14,16 @@ import {
   TextureLoader,
 } from 'three'
 
-import * as dat from 'dat.gui'
+// import * as dat from 'dat.gui'
 
 import { Error, Loading } from '../components'
 import { useUserMedia, removeUserMedia } from '../hooks'
 import { PALLETE } from '../common'
 
-const CAMERA_SCALE = 1.25
+const CAMERA_SCALE = 2
+const WIDTH = 1280 / CAMERA_SCALE
+const HEIGHT = 720 / CAMERA_SCALE
+
 let model: handpose.HandPose | undefined = undefined
 let raf = 0
 
@@ -43,17 +46,22 @@ const propsStatsContainer = {
   },
 }
 
-const propsGui = {
-  offsetX: -215,
-  offsetY: 137,
-}
+// const propsGui = {
+//   offsetX: -215,
+//   offsetY: 137,
+// }
 
 const HandPose = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(true)
-  const [stream] = useUserMedia({ video: true })
+  const [stream] = useUserMedia({
+    video: {
+      width: WIDTH,
+      height: HEIGHT,
+    },
+  })
   const [error, setError] = useState<boolean>(false)
 
   const estimateHands = useCallback(async () => {
@@ -68,11 +76,7 @@ const HandPose = () => {
           Object.keys(p.annotations).forEach((a, index) => {
             color.setHex(PALLETE[index % (PALLETE.length - 1)])
             p.annotations[a].forEach(i => {
-              positions.push(
-                i[0] - width / 2 + propsGui.offsetX,
-                height / 2 - i[1] + propsGui.offsetY,
-                -i[2]
-              )
+              positions.push(i[0] - width / 2, height / 2 - i[1], -i[2])
               colors.push(color.r, color.g, color.b)
             })
           })
@@ -114,7 +118,7 @@ const HandPose = () => {
 
     const { width, height } = canvasRef.current
 
-    camera = new PerspectiveCamera(90, width / height, 0.1, 1000)
+    camera = new PerspectiveCamera(60, width / height, 0.1, 1000)
     camera.position.z = width / 2
 
     const texture = new TextureLoader().load(
@@ -139,12 +143,12 @@ const HandPose = () => {
       statsRef.current?.appendChild(stats.dom)
     }
 
-    const gui = new dat.GUI()
-    gui.add(propsGui, 'offsetX', -300, 300, 1)
-    gui.add(propsGui, 'offsetY', -300, 300, 1)
+    // const gui = new dat.GUI()
+    // gui.add(propsGui, 'offsetX', -300, 300, 1)
+    // gui.add(propsGui, 'offsetY', -300, 300, 1)
 
     return () => {
-      gui.destroy()
+      // gui.destroy()
       cancelAnimationFrame(raf)
       removeUserMedia(stream)
       raf = 0
@@ -175,14 +179,14 @@ const HandPose = () => {
             <video
               style={{ opacity: 0.4, transform: 'scaleX(-1)' }}
               ref={videoRef}
-              width={640 * CAMERA_SCALE}
-              height={360 * CAMERA_SCALE}
+              width={WIDTH}
+              height={HEIGHT}
             />
             <canvas
               style={{ transform: 'scaleX(-1)', position: 'absolute', top: 0, left: 0 }}
               ref={canvasRef}
-              width={640 * CAMERA_SCALE}
-              height={360 * CAMERA_SCALE}
+              width={WIDTH}
+              height={HEIGHT}
             />
           </Box>
         </>

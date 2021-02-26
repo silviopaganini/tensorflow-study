@@ -1,11 +1,15 @@
-import { data, nextFrame } from '@tensorflow/tfjs'
-import React, { useEffect, useRef, useState } from 'react'
+import { nextFrame } from '@tensorflow/tfjs'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Button, Flex, Container, Heading } from 'theme-ui'
 import * as knn from '@tensorflow-models/knn-classifier'
 import * as mobilenet from '@tensorflow-models/mobilenet'
 import { Error, Loading } from '../components'
+import { removeUserMedia, useUserMedia } from '../hooks'
 
-const CAMERA_SCALE = 1.2
+const CAMERA_SCALE = 2
+const WIDTH = 1280 / CAMERA_SCALE
+const HEIGHT = 720 / CAMERA_SCALE
+
 const POSES = ['left', 'up', 'down', 'center', 'right'].sort((a, b) => a.localeCompare(b))
 let raf: number | undefined
 
@@ -13,12 +17,17 @@ const TransferLearning = () => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [modelMobilenet, setModelMobilenet] = useState<mobilenet.MobileNet>()
   const [modelKnn, setModelKnn] = useState<knn.KNNClassifier>()
-  const [webcam, setWebcam] = useState<any>()
   const [result, setResult] = useState<JSX.Element>()
   const [takingPictures, setTakingPictures] = useState<boolean>(false)
   const [takenPoses, setTakenPoses] = useState<any[]>([])
   const [allPoses, setAllPoses] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
+  const [media] = useUserMedia({
+    video: {
+      width: WIDTH,
+      height: HEIGHT,
+    },
+  })
 
   const stopLoopDetection = () => {
     if (raf) window.cancelAnimationFrame(raf)
@@ -26,16 +35,13 @@ const TransferLearning = () => {
   }
 
   const addExample = async (classId: number | string) => {
+    if (!videoRef.current) return
     setTakingPictures(true)
     let i = 0
 
     while (i < 15) {
-      const img = await webcam.capture()
-      const activation = modelMobilenet?.infer(img)
-
+      const activation = modelMobilenet?.infer(videoRef.current)
       if (activation) modelKnn?.addExample(activation, classId)
-
-      img.dispose()
       i++
       await nextFrame()
     }
@@ -50,10 +56,9 @@ const TransferLearning = () => {
   }
 
   const loopDetection = async () => {
-    if (!modelKnn) return
+    if (!modelKnn || !videoRef.current) return
     if (modelKnn.getNumClasses() > 0) {
-      const img = await webcam.capture()
-      const activation = modelMobilenet?.infer(img)
+      const activation = modelMobilenet?.infer(videoRef.current)
       const result = await modelKnn?.predictClass(activation!)
 
       setResult(
@@ -68,8 +73,6 @@ const TransferLearning = () => {
           ))}
         </Box>
       )
-
-      img.dispose()
     }
 
     raf = window.requestAnimationFrame(loopDetection)
@@ -79,24 +82,33 @@ const TransferLearning = () => {
     loopDetection()
   }
 
-  const loadModels = async (video: HTMLVideoElement) => {
+  const loadModels = useCallback(async () => {
     try {
       setModelMobilenet(await mobilenet.load())
       setModelKnn(await knn.create())
-      setWebcam(await data.webcam(video))
     } catch (e) {
       console.log(e)
       setError(true)
     }
-  }
+  }, [setError, setModelKnn, setModelMobilenet])
+
+  const setCamera = useCallback(() => {
+    if (!videoRef.current || !media) return
+    videoRef.current.onloadedmetadata = () => {
+      videoRef.current && videoRef.current.play()
+      loadModels()
+    }
+    videoRef.current.srcObject = media
+  }, [media, loadModels])
 
   useEffect(() => {
-    if (videoRef.current) loadModels(videoRef.current)
+    if (videoRef.current) setCamera()
 
     return () => {
       stopLoopDetection()
+      removeUserMedia(media)
     }
-  }, [videoRef])
+  }, [videoRef, media, setCamera])
 
   return (
     <Container as="section" variant="layout.section">
@@ -111,14 +123,14 @@ const TransferLearning = () => {
           {(!modelKnn || !modelMobilenet) && (
             <Loading text="Loading Mobilenet and KNN Tensorflow Models" />
           )}
-          <Box sx={{ maxWidth: 640 * CAMERA_SCALE }}>
+          <Box sx={{ maxWidth: WIDTH }}>
             <Box>
               <video
                 style={{
                   transform: 'scaleX(-1)',
                 }}
-                width={640 * CAMERA_SCALE}
-                height={480 * CAMERA_SCALE}
+                width={WIDTH}
+                height={HEIGHT}
                 ref={videoRef}
               />
             </Box>

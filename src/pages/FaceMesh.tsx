@@ -21,9 +21,9 @@ import { PALLETE } from '../common'
 
 let raf = 0
 
-const CAMERA_SCALE = 1.25
-const WIDTH = 640 * CAMERA_SCALE
-const HEIGHT = 360 * CAMERA_SCALE
+const CAMERA_SCALE = 2
+const WIDTH = 1280 / CAMERA_SCALE
+const HEIGHT = 720 / CAMERA_SCALE
 
 let model: faceLandmarksDetection.FaceLandmarksPackage
 
@@ -182,7 +182,7 @@ const FaceMesh = () => {
             </Box>
           )}
           <Box sx={{ position: 'relative', mt: 2 }}>
-            <video style={{ opacity: 0.4 }} autoPlay ref={videoRef} width={WIDTH} height={HEIGHT} />
+            <video style={{ opacity: 0.4 }} ref={videoRef} width={WIDTH} height={HEIGHT} />
             <canvas
               ref={canvasRef}
               style={{
