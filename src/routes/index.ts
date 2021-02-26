@@ -26,9 +26,14 @@ const Routes = [
     name: 'Random Image Detection',
   },
   {
+    path: `${BASEPATH}realtime-obj-detection`,
+    component: RealTimeObjDetection,
+    name: 'Real-time Detection',
+  },
+  {
     path: `${BASEPATH}webcam`,
     component: Webcam,
-    name: 'Object Detection',
+    name: 'Snapshot Detection',
   },
   {
     path: `${BASEPATH}transfer-learning`,
@@ -51,11 +56,7 @@ const Routes = [
     component: HandPose,
     name: 'Hand Mesh',
   },
-  {
-    path: `${BASEPATH}realtime-obj-detection`,
-    component: RealTimeObjDetection,
-    name: 'Real-time Detection',
-  },
+
   {
     path: `${BASEPATH}audio-analysis`,
     component: Audio,

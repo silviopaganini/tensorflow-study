@@ -16,7 +16,7 @@ import {
 } from 'three'
 
 import { Error, Loading } from '../components'
-import useUserMedia from '../hooks/useUserMedia'
+import { removeUserMedia, useUserMedia } from '../hooks'
 import { PALLETE } from '../common'
 
 let raf = 0
@@ -75,7 +75,8 @@ const FaceMesh = () => {
 
       positions = []
       colors = []
-      const { width, height } = canvasRef.current!
+
+      const { width, height } = canvasRef.current
       predictions?.forEach(p => {
         //@ts-ignore
         const { annotations } = p
@@ -119,7 +120,7 @@ const FaceMesh = () => {
   }, [loopPredictions])
 
   useEffect(() => {
-    if (!videoRef.current) return
+    if (!videoRef.current || !media) return
     videoRef.current.srcObject = media
     videoRef.current.onloadedmetadata = () => {
       videoRef.current?.play()
@@ -157,6 +158,7 @@ const FaceMesh = () => {
 
     return () => {
       cancelAnimationFrame(raf)
+      removeUserMedia(media)
       stats?.end()
     }
   }, [media, loadModel, videoRef, canvasRef, statsRef])

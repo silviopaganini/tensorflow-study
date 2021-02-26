@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Text, Container, Heading, Link } from 'theme-ui'
 import * as speechCommands from '@tensorflow-models/speech-commands'
-import useAnalyser from '../hooks/useAnalyser'
-import useUserMedia from '../hooks/useUserMedia'
+import { useUserMedia, useAnalyser, removeUserMedia } from '../hooks'
 import { Error, Loading } from '../components'
 
 let raf = 0
@@ -118,9 +117,10 @@ const Audio = () => {
     loadModel()
 
     return () => {
+      removeUserMedia(media)
       cancelAnimationFrame(raf)
     }
-  }, [canvasRef, analyser, loadModel])
+  }, [canvasRef, analyser, loadModel, media])
 
   return (
     <Container as="section" variant="layout.section">

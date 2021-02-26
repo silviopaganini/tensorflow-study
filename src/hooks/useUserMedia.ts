@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
 
-const useUserMedia = (props: MediaStreamConstraints) => {
+const useUserMedia = (props: MediaStreamConstraints): [MediaStream?, Error?] => {
   const [media, setMedia] = useState<MediaStream>()
-  const [error, setError] = useState<any>()
+  const [error, setError] = useState<Error>()
 
   useEffect(() => {
     if (media) return
     const getMedia = async () => {
       try {
-        setMedia(await navigator.mediaDevices.getUserMedia(props))
+        const m = await navigator.mediaDevices.getUserMedia(props)
+        m.addEventListener('removetrack', () => {
+          console.log('removetrack')
+        })
+        setMedia(m)
       } catch (e) {
         setError(e)
       }
@@ -16,8 +20,14 @@ const useUserMedia = (props: MediaStreamConstraints) => {
 
     getMedia()
   }, [props, media])
-
   return [media, error]
+}
+
+export const removeUserMedia = (media?: MediaStream) => {
+  media?.getTracks().forEach(m => {
+    m.stop()
+    media.removeTrack(m)
+  })
 }
 
 export default useUserMedia

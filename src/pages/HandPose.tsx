@@ -17,7 +17,7 @@ import {
 import * as dat from 'dat.gui'
 
 import { Error, Loading } from '../components'
-import useUserMedia from '../hooks/useUserMedia'
+import { useUserMedia, removeUserMedia } from '../hooks'
 import { PALLETE } from '../common'
 
 const CAMERA_SCALE = 1.25
@@ -105,7 +105,7 @@ const HandPose = () => {
   }, [setLoading, estimateHands])
 
   useEffect(() => {
-    if (!videoRef.current || !canvasRef.current) return
+    if (!videoRef.current || !canvasRef.current || !stream) return
     videoRef.current.srcObject = stream
     videoRef.current.onloadedmetadata = () => {
       videoRef.current!.play()
@@ -146,6 +146,7 @@ const HandPose = () => {
     return () => {
       gui.destroy()
       cancelAnimationFrame(raf)
+      removeUserMedia(stream)
       raf = 0
       stats.end()
     }

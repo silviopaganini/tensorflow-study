@@ -4,7 +4,7 @@ import * as cocoSsd from '@tensorflow-models/coco-ssd'
 import Stats from 'three/examples/jsm/libs/stats.module'
 
 import { Error, Loading } from '../components'
-import useUserMedia from '../hooks/useUserMedia'
+import { useUserMedia, removeUserMedia } from '../hooks'
 
 const CAMERA_SCALE = 1.5
 let raf = 0
@@ -78,7 +78,7 @@ const RealTimeObjDetection = () => {
   }, [setLoading, analyseCamera])
 
   useEffect(() => {
-    if (!videoRef.current || !canvasRef.current) return
+    if (!videoRef.current || !canvasRef.current || !stream) return
     videoRef.current.srcObject = stream
     videoRef.current.onloadedmetadata = () => {
       videoRef?.current?.play()
@@ -94,6 +94,7 @@ const RealTimeObjDetection = () => {
 
     return () => {
       cancelAnimationFrame(raf)
+      removeUserMedia(stream)
       raf = 0
     }
   }, [canvasRef, videoRef, stream, loadModel])
